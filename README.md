@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gumartinm/pyspark-shared-spark-session-helper.svg?branch=master)](https://travis-ci.org/gumartinm/pyspark-shared-spark-session-helper)
+
 PySpark: unit, integration and end to end tests.
 =========================
 
