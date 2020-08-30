@@ -28,7 +28,7 @@ class AwesomeService:
     def __rename_all_cols(schema, rename):
 
         def recur_rename(recur_schema):
-            return list(map(do_rename, recur_schema.fields))
+            return [do_rename(field) for field in recur_schema.fields]
 
         def do_rename(field):
             if isinstance(field.dataType, StructType):
