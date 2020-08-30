@@ -1,0 +1,13 @@
+dist: bionic
+
+language: python
+
+matrix:
+  include:
+    - python: 3.7
+
+install:
+  - pip install tox
+
+script:
+  - tox
