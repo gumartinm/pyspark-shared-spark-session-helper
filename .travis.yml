@@ -2,6 +2,11 @@ dist: bionic
 
 language: python
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+
 matrix:
   include:
     - python: 3.7
