@@ -15,21 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from pyspark.sql import SparkSession
 from pyspark.sql.types import StringType, StructField, StructType
+
+from src.awesome.service.awesome_service import AwesomeService
 
 
 class AwesomeJob:
     __DATABASE = 'testing'
     __TABLE = 'example'
 
-    def __init__(self, source_path, destination_path, spark_session, awesome_service):
+    def __init__(self, source_path: str, destination_path: str,
+                 spark_session: SparkSession, awesome_service: AwesomeService) -> None:
         self.source_path = source_path
         self.destination_path = destination_path
         self.spark_session = spark_session
         self.awesome_service = awesome_service
         self.logger = AwesomeJob.__logger(spark_session)
 
-    def run(self):
+    def run(self) -> None:
         self.logger.info('Running AwesomeJob')
 
         json_schema = StructType(

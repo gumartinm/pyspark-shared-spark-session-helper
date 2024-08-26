@@ -111,3 +111,5 @@ pip-selfcheck.json
 spark-warehouse/
 metastore_db/
 
+# Visual Studio Code
+.vscode/

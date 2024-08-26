@@ -19,11 +19,11 @@ import argparse
 
 from pyspark.sql import SparkSession
 
-from awesome.job.awesome_job import AwesomeJob
-from awesome.service.awesome_service import AwesomeService
+from src.awesome.job.awesome_job import AwesomeJob
+from src.awesome.service.awesome_service import AwesomeService
 
 
-def run(parsed_args):
+def run(parsed_args) -> None:
     spark_session = SparkSession \
         .builder \
         .appName('awesome-app') \

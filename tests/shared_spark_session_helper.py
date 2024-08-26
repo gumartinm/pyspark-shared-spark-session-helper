@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 import shutil
 import tempfile
 import uuid
@@ -33,7 +34,7 @@ class SharedSparkSessionHelper:
     path = None
 
     @classmethod
-    def spark_conf(cls):
+    def spark_conf(cls) -> SparkConf:
         shutil.rmtree(path=Path('spark-warehouse'), ignore_errors=True)
         shutil.rmtree(path=Path('metastore_db'), ignore_errors=True)
         random_uuid = str(uuid.uuid4())
@@ -50,8 +51,10 @@ class SharedSparkSessionHelper:
                  f'jdbc:derby:;databaseName={str(cls.__metastore_path.absolute())};create=true')
 
     @classmethod
-    def setup_class(cls):
+    def setup_class(cls) -> None:
         # Before All
+        spark_config_path = f"{Path(__file__).parent.resolve()}/conf"
+        os.environ['SPARK_CONF_DIR'] = spark_config_path
         cls.spark_session = SparkSession \
             .builder \
             .master('local[2]') \
@@ -60,12 +63,12 @@ class SharedSparkSessionHelper:
             .enableHiveSupport() \
             .getOrCreate()
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         # Before Each
         self.__temporary_path = tempfile.TemporaryDirectory()
         self.path = Path(self.__temporary_path.name)
 
-    def teardown_method(self):
+    def teardown_method(self) -> None:
         # After Each
         self.__temporary_path.cleanup()
 
@@ -74,13 +77,13 @@ class SharedSparkSessionHelper:
         jvm_session.sessionState().catalog().reset()
 
     @classmethod
-    def teardown_class(cls):
+    def teardown_class(cls) -> None:
         # After All
-        cls.spark_session.stop()
-
         jvm_session = cls.spark_session._jvm.SparkSession.getActiveSession().get()  # pylint: disable=W0212
         jvm_session.clearActiveSession()
         jvm_session.clearDefaultSession()
+
+        cls.spark_session.stop()
 
         shutil.rmtree(path=cls.__warehouse_path, ignore_errors=True)
         shutil.rmtree(path=cls.__metastore_path, ignore_errors=True)

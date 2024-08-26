@@ -15,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from awesome.service.awesome_service import AwesomeService
-
 from pyspark.sql.types import StructType, StringType, StructField, ArrayType
+
+from src.awesome.service.awesome_service import AwesomeService
 
 
 class TestAwesomeService:
 
-    def test_rename_columns_to_upper_case(self):
+    def test_rename_columns_to_upper_case(self) -> None:
         service = AwesomeService()
         some_shema = StructType(
             [

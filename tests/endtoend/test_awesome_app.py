@@ -15,30 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import os
 from collections import namedtuple
+import pathlib
 
-import pytest
-from awesome.app.awesome_app import run
+from src.awesome.app.awesome_app import run
 
 from tests.commons import create_expected_data_frame
 from tests.holdenkarau.sqltestcase import SQLTestCase
 from tests.shared_spark_session_helper import SharedSparkSessionHelper
 
-FIXTURES_DIR = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    'fixtures',
-)
 
-
-@pytest.mark.datafiles(
-    os.path.join(FIXTURES_DIR, 'awesomeapp', 'sourcepath'),
-    keep_top_dir=True
-)
 class TestAwesomeApp(SharedSparkSessionHelper):
 
-    def test_run_awesome_app_with_success(self, datafiles):
-        source_path = str(datafiles.listdir()[0])
+    def test_run_awesome_app_with_success(self) -> None:
+        source_path = f"{pathlib.Path(__file__).parent.resolve()}/fixtures/awesomeapp/sourcepath/awesome.json"
         destination_path = self.path / 'destinationpath/awesomeapp/'
 
         ParsedArgs = namedtuple('ParsedArgs', 'source destination')

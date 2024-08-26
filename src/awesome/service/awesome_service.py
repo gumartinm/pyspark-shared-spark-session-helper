@@ -21,16 +21,16 @@ from pyspark.sql.types import StructType, StructField, ArrayType
 class AwesomeService:
 
     @classmethod
-    def rename_columns_to_upper_case(cls, schema):
+    def rename_columns_to_upper_case(cls, schema: StructType) -> StructType:
         return cls.__rename_all_cols(schema, cls.__to_upper_case)
 
     @staticmethod
-    def __rename_all_cols(schema, rename):
+    def __rename_all_cols(schema: StructType, rename) -> StructType:
 
-        def recur_rename(recur_schema):
+        def recur_rename(recur_schema: StructType) -> list[StructField]:
             return [do_rename(field) for field in recur_schema.fields]
 
-        def do_rename(field):
+        def do_rename(field: StructField) -> StructField:
             if isinstance(field.dataType, StructType):
                 return StructField(rename(field.name), StructType(recur_rename(field.dataType)), field.nullable,
                                    field.metadata)
@@ -51,5 +51,5 @@ class AwesomeService:
         return StructType(recur_rename(schema))
 
     @staticmethod
-    def __to_upper_case(string):
+    def __to_upper_case(string: str) -> str:
         return string.upper()

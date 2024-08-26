@@ -8,12 +8,16 @@ PySpark: unit, integration and end to end tests.
 
 ### Prerequisites
 
-In order to build this project [**tox**](https://tox.readthedocs.io/en/latest/) and [**JVM 8**](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot) must be available in your environment.
+In order to build this project [**poetry**](https://python-poetry.org/docs/) and [**JVM 8**](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot) must be available in your environment.
 
 ### Command
 
 ```
-tox
+poetry install
+poetry run pylint --output-format=colorized --fail-under=8 src/ tests/
+poetry run pycodestyle --config pycodestyle.ini src/ tests/
+poetry run pytest
+poetry build
 ```
 
 
