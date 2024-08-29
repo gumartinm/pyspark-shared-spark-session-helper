@@ -113,3 +113,6 @@ metastore_db/
 
 # Visual Studio Code
 .vscode/
+
+# pytest reports
+pytestreports/

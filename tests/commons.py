@@ -15,8 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from pyspark.sql import Row
-from pyspark.sql.types import StructType, StructField, StringType
+from pyspark.sql import Row, SparkSession
+from pyspark.sql.dataframe import DataFrame
+from pyspark.sql.types import StringType, StructField, StructType
 
 UPPER_CASE_SCHEMA = StructType(
     [
@@ -26,7 +27,16 @@ UPPER_CASE_SCHEMA = StructType(
 )
 
 
-def create_expected_data_frame(spark_session):
+def create_expected_data_frame(spark_session: SparkSession) -> DataFrame:
+    """
+    Create an expected data frame using the given Spark session.
+
+    Args:
+        spark_session: The Spark session object.
+
+    Returns:
+        The expected data frame.
+    """
     return spark_session.createDataFrame(
         spark_session.sparkContext.parallelize(
             [

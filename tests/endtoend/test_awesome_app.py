@@ -15,26 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from collections import namedtuple
 import pathlib
 
-from src.awesome.app.awesome_app import run
-
+from src.awesome.app import awesome_app
 from tests.commons import create_expected_data_frame
 from tests.holdenkarau.sqltestcase import SQLTestCase
 from tests.shared_spark_session_helper import SharedSparkSessionHelper
 
 
 class TestAwesomeApp(SharedSparkSessionHelper):
+    """Test class for the AwesomeApp."""
 
     def test_run_awesome_app_with_success(self) -> None:
+        """Test the run method of the AwesomeApp with success."""
+        # ARRANGE
         source_path = f"{pathlib.Path(__file__).parent.resolve()}/fixtures/awesomeapp/sourcepath/awesome.json"
-        destination_path = self.path / 'destinationpath/awesomeapp/'
+        destination_path = f"{self.path}/destinationpath/awesomeapp/"
 
-        ParsedArgs = namedtuple('ParsedArgs', 'source destination')
-        parsed_args = ParsedArgs(source_path, destination_path)
-        run(parsed_args)
+        # ACT
+        awesome_app.main(['--source', source_path, '--destination', destination_path])
 
+        # ASSERT
         result_data_frame = self.spark_session.sql('SELECT * FROM testing.example')
         expected_data_frame = create_expected_data_frame(self.spark_session)
 

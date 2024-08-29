@@ -24,12 +24,20 @@
 
 import unittest
 
+from pyspark.sql.dataframe import DataFrame
+
 
 class SQLTestCase(unittest.TestCase):
+    """A test case class for SQL operations."""
 
-    def assertDataFrameEqual(self, expected, result, tol=0):
-        """Assert that two DataFrames contain the same data.
-        When comparing inexact fields uses tol.
+    def assertDataFrameEqual(self, expected: DataFrame, result: DataFrame, tol: float = 0) -> None:
+        """
+        Assert that two DataFrames are equal.
+
+        Args:
+            expected (DataFrame): The expected DataFrame.
+            result (DataFrame): The actual DataFrame.
+            tol (float, optional): The tolerance for comparing floating-point values. Defaults to 0.
         """
         self.assertEqual(expected.schema, result.schema)
         try:
@@ -38,10 +46,10 @@ class SQLTestCase(unittest.TestCase):
             self.assertEqual(expectedRDD.count(), resultRDD.count())
 
             def zipWithIndex(rdd):
-                """Zip with index (idx, data)"""
+                """Zip with index (idx, data)."""
                 return rdd.zipWithIndex().map(lambda x: (x[1], x[0]))
 
-            def equal(x, y):
+            def equal(x, y) -> bool:
                 if (len(x) != len(y)):
                     return False
                 elif (x == y):

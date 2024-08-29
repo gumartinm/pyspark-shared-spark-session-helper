@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 import argparse
+import sys
 
 from pyspark.sql import SparkSession
 
@@ -24,6 +25,15 @@ from src.awesome.service.awesome_service import AwesomeService
 
 
 def run(parsed_args) -> None:
+    """
+    Run the Awesome Spark application.
+
+    Args:
+        parsed_args (argparse.Namespace): Parsed command-line arguments.
+
+    Returns:
+        None
+    """
     spark_session = SparkSession \
         .builder \
         .appName('awesome-app') \
@@ -35,10 +45,32 @@ def run(parsed_args) -> None:
     AwesomeJob(parsed_args.source, parsed_args.destination, spark_session, awesome_service).run()
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Awesome Spark application')
-    parser.add_argument('--source', type=str, required=True, dest='source', help='Source path')
-    parser.add_argument('--destination', type=str, required=True, dest='destination', help='Destination path')
-    args = parser.parse_args()
+def main(args: list[str]) -> None:
+    """
+    Run the main function of the Awesome Spark application.
 
+    Args:
+        args (list[str]): Command-line arguments.
+
+    Returns:
+        None
+    """
+    parser = argparse.ArgumentParser(description='Awesome Spark application')
+
+    parser.add_argument('--source',
+                        type=str,
+                        required=True,
+                        dest='source',
+                        help='Source path')
+    parser.add_argument('--destination',
+                        type=str,
+                        required=True,
+                        dest='destination',
+                        help='Destination path')
+
+    args = parser.parse_args(args)
     run(args)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

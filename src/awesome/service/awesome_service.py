@@ -15,13 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from pyspark.sql.types import StructType, StructField, ArrayType
+from pyspark.sql.types import ArrayType, StructField, StructType
 
 
 class AwesomeService:
+    """This is the AwesomeService class."""
 
     @classmethod
     def rename_columns_to_upper_case(cls, schema: StructType) -> StructType:
+        """
+        Rename the columns in the schema to upper case.
+
+        Args:
+            schema (StructType): The input schema.
+
+        Returns:
+            StructType: The schema with renamed columns.
+        """
         return cls.__rename_all_cols(schema, cls.__to_upper_case)
 
     @staticmethod

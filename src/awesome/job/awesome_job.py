@@ -22,11 +22,22 @@ from src.awesome.service.awesome_service import AwesomeService
 
 
 class AwesomeJob:
+    """This class represents an awesome job."""
+
     __DATABASE = 'testing'
     __TABLE = 'example'
 
     def __init__(self, source_path: str, destination_path: str,
                  spark_session: SparkSession, awesome_service: AwesomeService) -> None:
+        """
+        Initialize the AwesomeJob class.
+
+        Args:
+            source_path (str): The source path.
+            destination_path (str): The destination path.
+            spark_session (SparkSession): The SparkSession object.
+            awesome_service (AwesomeService): The AwesomeService object.
+        """
         self.source_path = source_path
         self.destination_path = destination_path
         self.spark_session = spark_session
@@ -34,6 +45,7 @@ class AwesomeJob:
         self.logger = AwesomeJob.__logger(spark_session)
 
     def run(self) -> None:
+        """Run the awesome job."""
         self.logger.info('Running AwesomeJob')
 
         json_schema = StructType(

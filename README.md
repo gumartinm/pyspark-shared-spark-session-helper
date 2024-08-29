@@ -14,6 +14,7 @@ In order to build this project [**poetry**](https://python-poetry.org/docs/) and
 
 ```
 poetry install
+poetry run ruff check
 poetry run pylint --output-format=colorized --fail-under=8 src/ tests/
 poetry run pycodestyle --config pycodestyle.ini src/ tests/
 poetry run pytest

@@ -22,22 +22,25 @@ from pyspark import SparkConf
 from pyspark.sql.types import StringType, StructField, StructType
 
 from src.awesome.job.awesome_job import AwesomeJob
-from tests.commons import create_expected_data_frame, UPPER_CASE_SCHEMA
+from tests.commons import UPPER_CASE_SCHEMA, create_expected_data_frame
 from tests.holdenkarau.sqltestcase import SQLTestCase
 from tests.shared_spark_session_helper import SharedSparkSessionHelper
 
 
 class TestAwesomeJob(SharedSparkSessionHelper):
+    """Test class for the AwesomeJob."""
 
     # Each set of tests may run with its own Spark configuration in an isolated way.
     @classmethod
     def spark_conf(cls) -> SparkConf:
+        """Return the Spark configuration for the test."""
         conf = super().spark_conf()
         return conf.set('spark.sql.sources.partitionOverwriteMode', 'dynamic')
 
     def test_run_awesome_job_with_success(self) -> None:
+        """Test the successful execution of the `AwesomeJob`."""
         source_path = f"{pathlib.Path(__file__).parent.resolve()}/fixtures/awesomejob/sourcepath/awesome.json"
-        destination_path = self.path / 'destinationpath/awesomejob/'
+        destination_path = f"{self.path}/destinationpath/awesomejob/"
         schema = StructType(
             [
                 StructField('name', StringType()),
@@ -59,8 +62,9 @@ class TestAwesomeJob(SharedSparkSessionHelper):
             data_frame_suite.assertDataFrameEqual(expected=expected_data_frame, result=result_data_frame, tol=0)
 
     def test_run_awesome_job_again_with_success(self) -> None:
+        """Test the successful execution of the `AwesomeJob` with the second set of data."""
         source_path = f"{pathlib.Path(__file__).parent.resolve()}/fixtures/awesomejob/sourcepath/awesome.json"
-        destination_path = self.path / 'destinationpath/awesomejob/'
+        destination_path = f"{self.path}/destinationpath/awesomejob/"
         schema = StructType(
             [
                 StructField('name', StringType()),

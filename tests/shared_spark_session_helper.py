@@ -26,15 +26,23 @@ from pyspark.sql import SparkSession
 
 
 class SharedSparkSessionHelper:
-    __warehouse_path = None
-    __metastore_path = None
-    __temporary_path = None
+    """Helper class for managing a shared SparkSession."""
 
-    spark_session = None
-    path = None
+    __warehouse_path: Path = None
+    __metastore_path: Path = None
+    __temporary_path: Path = None
+
+    spark_session: 'SparkSession' = None
+    path: Path = None
 
     @classmethod
     def spark_conf(cls) -> SparkConf:
+        """
+        Return the SparkConf object for configuring the SparkSession.
+
+        Returns:
+            SparkConf: The SparkConf object.
+        """
         shutil.rmtree(path=Path('spark-warehouse'), ignore_errors=True)
         shutil.rmtree(path=Path('metastore_db'), ignore_errors=True)
         random_uuid = str(uuid.uuid4())
@@ -48,10 +56,15 @@ class SharedSparkSessionHelper:
             .set('spark.sql.session.timeZone', 'UTC') \
             .set('spark.sql.warehouse.dir', str(cls.__warehouse_path.absolute())) \
             .set('javax.jdo.option.ConnectionURL',
-                 f'jdbc:derby:;databaseName={str(cls.__metastore_path.absolute())};create=true')
+                 f'jdbc:derby:;databaseName={cls.__metastore_path.absolute()!s};create=true')
 
     @classmethod
     def setup_class(cls) -> None:
+        """
+        Set up the class before running any tests.
+
+        This method is executed once before any test method in the class.
+        """
         # Before All
         spark_config_path = f"{Path(__file__).parent.resolve()}/conf"
         os.environ['SPARK_CONF_DIR'] = spark_config_path
@@ -64,11 +77,21 @@ class SharedSparkSessionHelper:
             .getOrCreate()
 
     def setup_method(self) -> None:
+        """
+        Set up the test method before running it.
+
+        This method is executed before each test method.
+        """
         # Before Each
         self.__temporary_path = tempfile.TemporaryDirectory()
         self.path = Path(self.__temporary_path.name)
 
     def teardown_method(self) -> None:
+        """
+        Teardown the test method after running it.
+
+        This method is executed after each test method.
+        """
         # After Each
         self.__temporary_path.cleanup()
 
@@ -78,6 +101,11 @@ class SharedSparkSessionHelper:
 
     @classmethod
     def teardown_class(cls) -> None:
+        """
+        Teardown the class after running all tests.
+
+        This method is executed once after all test methods in the class.
+        """
         # After All
         jvm_session = cls.spark_session._jvm.SparkSession.getActiveSession().get()  # pylint: disable=W0212
         jvm_session.clearActiveSession()
