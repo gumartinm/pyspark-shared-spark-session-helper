@@ -1,0 +1,41 @@
+name: master
+
+# Workflow that runs for pushes to the master branch.
+
+on:
+  push:
+    branches: master
+
+jobs:
+  deploy-master-app:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install Java 8
+      run: source ci/java_install.sh
+
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        poetry install
+
+    - name: Run checks
+      run: |
+        poetry run ruff check
+        poetry run pylint --output-format=colorized --fail-under=8 src/ tests/
+        poetry run pycodestyle --config pycodestyle.ini src/ tests/
+
+    - name: Run tests
+      run: poetry run pytest
+
+    - name: Build
+      run: poetry build 
