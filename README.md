@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gumartinm/pyspark-shared-spark-session-helper.svg?branch=master)](https://travis-ci.org/gumartinm/pyspark-shared-spark-session-helper)
+[![Build Status](https://github.com/gumartinm/pyspark-shared-spark-session-helper/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/gumartinm/pyspark-shared-spark-session-helper/actions/workflows/master.yml)
 
 PySpark: unit, integration and end to end tests.
 =========================
